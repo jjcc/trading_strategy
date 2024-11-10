@@ -38,12 +38,13 @@ def get_crossing_points(data:pd.DataFrame, ema_period:int) -> list:
             crossings.append((data.index[i], 'down'))
     return crossings
 
-def plot_stock_data(stock_prices, ema_period, deviations, cross_points=None):
+def plot_stock_data(stock_prices, ema_period, deviations, cross_points=None, incluiing_dev=True):
     # Create visualization
-    plt.figure(figsize=(15, 10))
+    plt.figure(figsize=(15, 10 if incluiing_dev else 5))
 
     # Plot 1: Price vs EMA
-    plt.subplot(2, 1, 1)
+    if incluiing_dev:
+        plt.subplot(2, 1, 1)
     plt.plot(stock_prices['Close'], label='Close Price', alpha=0.7)
     plt.plot(calculate_ema(stock_prices['Close'], ema_period), label=f'EMA-{ema_period}', alpha=0.7, color='blue')
     plt.plot(calculate_ema(stock_prices['Close'], 5), label='EMA-5', alpha=0.7, color='green')
@@ -59,6 +60,9 @@ def plot_stock_data(stock_prices, ema_period, deviations, cross_points=None):
     
     plt.title('Stock Price vs EMA')
     plt.legend()
+
+    if not incluiing_dev:
+        return
 
     # Plot 2: Deviations from EMA
     plt.subplot(2, 1, 2)
